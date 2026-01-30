@@ -1,6 +1,6 @@
 # Gengram: Retrieval-Augmented Genomic Foundation Models
 
-<div align="center" style="line-height: 1;">
+<div align="center" style="line-height: 2;">
   <a href="https://huggingface.co/BGI-HangzhouAI/Gengram" target="_blank">
       <img alt="Hugging Face" src="https://img.shields.io/badge/🤗%20Hugging%20Face-Gengram%20-ffc107"/>
   </a>
@@ -10,7 +10,12 @@
   <a href="https://github.com/BGI-HangzhouAI/Gengram/blob/main/LICENSE" target="_blank">
       <img alt="License" src="https://img.shields.io/badge/📑%20License- Apache 2.0-FFC0CB"/> 
   </a>
+
+![Badge](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2FBGI-HangzhouAI%2FGengram&label=visitors&icon=github&color=%23198754&message=&style=flat&tz=Asia%2FShanghai)
+
 </div>
+
+
 
 ## 1. Introduction
 
