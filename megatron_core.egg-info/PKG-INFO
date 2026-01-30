@@ -1,0 +1,164 @@
+Metadata-Version: 2.4
+Name: megatron-core
+Version: 0.16.0rc0
+Summary: Megatron Core - a library for efficient and scalable training of transformer based models
+Author-email: NVIDIA <nemo-toolkit@nvidia.com>
+Maintainer-email: NVIDIA <nemo-toolkit@nvidia.com>
+License: Apache 2.0
+Project-URL: Download, https://github.com/NVIDIA/Megatron-LM/releases
+Project-URL: Homepage, https://github.com/NVIDIA/Megatron-LM/megatron/core
+Keywords: NLP,NLU,deep,gpu,language,learning,learning,machine,nvidia,pytorch,torch,transformer
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: Topic :: Scientific/Engineering :: Image Recognition
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Utilities
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: torch
+Requires-Dist: numpy<2.0.0
+Requires-Dist: packaging>=24.2
+Provides-Extra: mlm
+Requires-Dist: flask-restful; extra == "mlm"
+Requires-Dist: sentencepiece; extra == "mlm"
+Requires-Dist: tiktoken; extra == "mlm"
+Requires-Dist: wandb; extra == "mlm"
+Requires-Dist: transformers; extra == "mlm"
+Provides-Extra: dev
+Requires-Dist: nvidia-modelopt[torch]<0.34.0,>=0.33.0a0; sys_platform != "darwin" and extra == "dev"
+Requires-Dist: transformer-engine[pytorch]<2.10.0,>=2.9.0a0; extra == "dev"
+Requires-Dist: nvidia-resiliency-ext<0.5.0,>=0.4.0a0; extra == "dev"
+Requires-Dist: tqdm; extra == "dev"
+Requires-Dist: einops~=0.8; extra == "dev"
+Requires-Dist: tensorstore!=0.1.46,!=0.1.72,~=0.1; extra == "dev"
+Requires-Dist: nvtx~=0.2; extra == "dev"
+Requires-Dist: multi-storage-client~=0.27; extra == "dev"
+Requires-Dist: opentelemetry-api~=1.33.1; extra == "dev"
+Requires-Dist: setuptools<80.0.0; extra == "dev"
+Requires-Dist: mamba-ssm~=2.2; extra == "dev"
+Requires-Dist: causal-conv1d~=1.5; extra == "dev"
+Requires-Dist: nv-grouped-gemm~=1.1; extra == "dev"
+Requires-Dist: megatron-energon[av_decode]~=6.0; extra == "dev"
+Requires-Dist: av<16.0.0; extra == "dev"
+Requires-Dist: flashinfer-python; extra == "dev"
+Requires-Dist: wget; extra == "dev"
+Requires-Dist: onnxscript; extra == "dev"
+Requires-Dist: flash-linear-attention~=0.3.2; extra == "dev"
+Requires-Dist: emerging_optimizers; extra == "dev"
+Provides-Extra: lts
+Requires-Dist: tqdm; extra == "lts"
+Requires-Dist: einops; extra == "lts"
+Requires-Dist: tensorstore!=0.1.46,!=0.1.72; extra == "lts"
+Requires-Dist: nvtx; extra == "lts"
+Requires-Dist: transformers; extra == "lts"
+Requires-Dist: zarr; extra == "lts"
+Requires-Dist: setuptools<80.0.0; extra == "lts"
+Requires-Dist: wget; extra == "lts"
+Dynamic: license-file
+
+<div align="center">
+
+Megatron-LM & Megatron Core
+===========================
+
+<h4>GPU-optimized library for training transformer models at scale</h4>
+
+[![Documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](https://docs.nvidia.com/Megatron-Core/developer-guide/latest/index.html)
+[![version](https://img.shields.io/badge/release-0.12.0-green)](./CHANGELOG.md)
+[![license](https://img.shields.io/badge/license-Apache-blue)](./LICENSE)
+
+<div align="left">
+
+> ## 🚨 **DEVELOPMENT BRANCH**
+> ⚠️ **EXPERIMENTAL FEATURES** - This is the **dev branch** with experimental features. 
+>
+> **→ For releases and comprehensive documentation, visit the [main branch](https://github.com/NVIDIA/Megatron-LM)**
+
+## ⚡ Quickstart
+
+```bash
+# Clone the dev branch
+git clone -b dev https://github.com/NVIDIA/Megatron-LM.git
+cd Megatron-LM
+
+# Install from source with dev dependencies (includes transformer_engine)
+pip install -e .[mlm,dev]
+```
+
+<details>
+<summary>Table of Contents</summary>
+
+**Getting Started**
+- [⚡ Quick Start](#-quick-start)
+- [🧠 Dev Branch Philosophy](#-dev-branch-philosophy)
+- [📊 Performance & Benchmarking](#-performance--benchmarking)
+- [👥 Community & Support](#-community--support)
+
+**For Complete Documentation** → [Main Branch](https://github.com/NVIDIA/Megatron-LM) | [Official Docs](https://docs.nvidia.com/Megatron-Core/)
+
+</details>
+
+
+
+
+
+
+## Dev Branch Philosophy
+
+### Fast Iteration
+- **Streamlined Review**: 1 code owner + 1 dev approver (can delegate review) + CI/CD
+
+### Feature Lifecycle (Coming Soon)
+- **6-Month Timeline**: Experimental features must graduate to stable or be deprecated
+- **Migration Support**: Assistance provided for feature transitions
+
+### Stability Expectations
+- **Experimental Nature**: Features may change or be removed as development progresses
+- **Testing**: All features will pass convergence and performance validation before inclusion
+- **Support**: Dev branch issues should include `[DEV]` prefix
+
+## Performance & Benchmarking
+
+- 🚀 [2025/11] [Optimizing DeepSeek-V3 Training Performance on NVIDIA GB200 NVL72](docs/discussions/deepseek-v3-gb200-optimization/deepseek-v3-gb200-optimization.md).
+- ⚡ [2025/11] [A Guide to Reproduce DeepSeek-V3 Pre-training Performance on GB200](docs/discussions/deepseek-v3-gb200-optimization/deepseek-v3-gb200-reproduce-guide.md).
+
+## Community & Support
+
+### Getting Help
+- 📖 **[Documentation](https://docs.nvidia.com/Megatron-Core/)** - Official documentation
+- 🐛 **[Issues](https://github.com/NVIDIA/Megatron-LM/issues)** - Bug reports and feature requests
+
+### Contributing
+We ❤️ contributions! Ways to contribute:
+
+- 🐛 **Report bugs** - Help us improve reliability
+- 💡 **Suggest features** - Shape the future of Megatron Core
+- 📝 **Improve docs** - Make Megatron Core more accessible
+- 🔧 **Submit PRs** - Contribute code improvements
+
+**→ [Contributing Guide](./CONTRIBUTING.md)**
+
+### Citation
+```bibtex
+@article{megatron-lm,
+  title={Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism},
+  author={Shoeybi, Mohammad and Patwary, Mostofa and Puri, Raul and LeGresley, Patrick and Casper, Jared and Catanzaro, Bryan},
+  journal={arXiv preprint arXiv:1909.08053},
+  year={2019}
+}
+```
