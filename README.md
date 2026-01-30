@@ -1,91 +1,170 @@
+# Gengram: Retrieval-Augmented Genomic Foundation Models
+
+<div align="center" style="line-height: 1;">
+  <a href="https://huggingface.co/BGI-HangzhouAI/Gengram" target="_blank">
+      <img alt="Hugging Face" src="https://img.shields.io/badge/🤗%20Hugging%20Face-Gengram%20-ffc107"/>
+  </a>
+  <a href="https://arxiv.org/abs/7211321" target="_blank">
+      <img alt="arXiv" src="https://img.shields.io/badge/📜%20arXiv-Technical Report-brightgreen?logo=Linkedin&logoColor=white"/>
+  </a>
+  <a href="https://github.com/BGI-HangzhouAI/Gengram/blob/main/LICENSE" target="_blank">
+      <img alt="License" src="https://img.shields.io/badge/📑%20License- Apache 2.0-FFC0CB"/> 
+  </a>
+</div>
+
+## 1. Introduction
+
+Gengram is a novel conditional memory module designed for genomic foundation models (GFMs) that introduces explicit motif memory retrieval to enhance Transformer-based DNA sequence modeling. Unlike traditional GFMs that rely on dense computation to implicitly infer multi-nucleotide motifs, Gengram provides an efficient lookup mechanism for biological patterns through a genomic-specific hashing scheme.
+
+Figure 1 illustrates the overall architecture of Gengram, together with the evaluation pipeline used to assess its effectiveness across multiple genomic benchmarks.
+
+![Gengram](./images/gengram_model.png)
+
+### ✨ Key Features
+
+- **🎯 Explicit Motif Memory**: Stores and retrieves k-mers (k=1-6) via hash-based lookup tables
+- **🧬 Local Window Aggregation**: 21bp window mechanism aligned with DNA helical structure
+- **⚡ Computational Efficiency**: Linear time complexity with minimal overhead
+- **🔧 Architecture Agnostic**: Compatible with various attention mechanisms (MHA, GQA, MLA)
+- **⚖️ Stable Training**: Improves load balancing in Mixture-of-Experts models
+- **🔍 Biological Interpretability**: Learns meaningful motif representations
+
+### ✨ Biological Interpretability
+Gengram exhibits clear biologically grounded behaviors, including:
+- **Reverse-complement symmetry** in memory embeddings
+- **Context-dependent gating** aligned with functional regions
+- **Hierarchical representation** from shallow to deep layers
+
+## 2. Model Information
+
+### Model Configuration
+
+The following details the model configuration, including the parameterization of Gengram, MoE routing strategies, and training hyperparameters used across all experiments.
+
+- **Gengram Parameters**
+
+  These parameters control how Gengram operates within the Transformer layers, including which layers to apply it to, the n-gram sizes, and embedding dimensions.
 <div align="center">
 
-Megatron-LM & Megatron Core
-===========================
+| Parameter | Description | Example |
+|-----------|-------------|---------|
+| `--gengram-enabled` | Enable Gengram | `true` |
+| `--gengram-layer-ids` | Layers to apply Gengram | `3 6 10` |
+| `--gengram-ngram-sizes` | N-gram sizes for DNA processing | `1 2 3 4 5 6` |
+| `--gengram-embed-dim-per-ngram` | Embedding dimension per n-gram | `1024` |
+| `--gengram-window-size` | window size | `21` |
 
-<h4>GPU-optimized library for training transformer models at scale</h4>
+</div>
 
-[![Documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](https://docs.nvidia.com/Megatron-Core/developer-guide/latest/index.html)
-[![version](https://img.shields.io/badge/release-0.12.0-green)](./CHANGELOG.md)
-[![license](https://img.shields.io/badge/license-Apache-blue)](./LICENSE)
+- **Mixture of Experts (MoE)**
 
-<div align="left">
+  These parameters define the Mixture-of-Experts architecture, including the number of experts, routing top-k, and load balancing strategies during training.
 
-> ## 🚨 **DEVELOPMENT BRANCH**
-> ⚠️ **EXPERIMENTAL FEATURES** - This is the **dev branch** with experimental features. 
->
-> **→ For releases and comprehensive documentation, visit the [main branch](https://github.com/NVIDIA/Megatron-LM)**
+<div align="center">
 
-## ⚡ Quickstart
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `--num-experts` | Number of experts | `8` |
+| `--moe-router-topk` | Top-k experts to route to | `2` |
+| `--moe-router-load-balancing-type` | Load balancing strategy | `aux_loss` |
+| `--moe-aux-loss-coeff` | Auxiliary loss coefficient | `1e-3` |
+
+</div>
+
+- **Training Parameters**
+
+  These parameters specify the training setup, including sequence length, batch sizes, precision, and attention optimizations.
+
+<div align="center">
+
+| Parameter | Description | Example |
+|-----------|-------------|---------|
+| `--seq-length` | Maximum sequence length | `8192` |
+| `--micro-batch-size` | Micro batch size per GPU | `1` |
+| `--global-batch-size` | Global batch size across all GPUs | `1024` |
+| `--bf16` | Use BF16 precision | `true` |
+| `--use-flash-attn` | Enable Flash Attention | `true` |
+
+</div>
+
+### Pre-training Data
+- **Human Sequences**: HPRC Release 2, GRCh38, CHM13
+- **Non-human Primates**: NCBI RefSeq database
+- **Total**: 200B tokens (8k context) + 100B tokens (32k context)
+
+## 3. Performance Evaluation
+
+Gengram demonstrates strong performance across multiple genomic benchmarks, achieving competitive results despite being trained on significantly fewer tokens and with a smaller model size.
+
+<div align="center">
+
+| Metric | [Gengram-10B](https://huggingface.co/BGI-HangzhouAI/Gengram) | [Genos-10B](https://huggingface.co/BGI-HangzhouAI/Genos-10B) | [Evo2-40B](https://huggingface.co/arcinstitute/evo2_40b) |
+|--------|:-------------:|:-----------:|:----------:|
+| **Trained Tokens** | 200B | 2.2T | 9.3T |
+| **Multi-species Exon Classification** | **0.9832** | 0.9755 | 0.9332 |
+| **Splice Site Identification** | 0.9009 | 0.7990 | **0.9138** |
+| **Human OCR Ensembl** | **0.7714** | 0.7623 | 0.7635 |
+
+</div>
+
+- **Key Observations**
+
+  - Data Efficiency: Achieves comparable performance using ~10×–40× fewer tokens
+  - Motif-Dominated Tasks: Up to 14% improvement
+  - Long-Context Modeling: Enhanced performance with shorter sequences
+  - Training Efficiency: Better parameter utilization and stable MoE training
+
+- **Evaluation Benchmarks**
+  - Genomic Benchmarks (GB)
+  - Nucleotide Transformer Benchmarks (NTB)
+  - Long-Range Benchmarks (LRB)
+  - Genos Benchmarks (GeB)
+
+## 4. Quickstart
+
+### Model Download
+Gengram model is available for download from Hugging Face. We provide `torch` version.
+
+<div align="center">
+
+| **Model** | **Activated Params** | **Hugging Face** | **Format** 
+|:---------:|:----------------:|:----------------:|:----------------:|
+| Gengram-10B | 2.87 B | [🤗 Hugging Face](https://huggingface.co/BGI-HangzhouAI/Gengram) | torch |
+
+
+</div>
+
+### Pre-training
+
+Run the pre-training script with the following command:
 
 ```bash
-# Clone the dev branch
-git clone -b dev https://github.com/NVIDIA/Megatron-LM.git
-cd Megatron-LM
-
-# Install from source with dev dependencies (includes transformer_engine)
-pip install -e .[mlm,dev]
+cd Gengram
+bash Gengram_layer3-6-10_win21_pp2.sh
 ```
 
-<details>
-<summary>Table of Contents</summary>
+## 5. License
 
-**Getting Started**
-- [⚡ Quick Start](#-quick-start)
-- [🧠 Dev Branch Philosophy](#-dev-branch-philosophy)
-- [📊 Performance & Benchmarking](#-performance--benchmarking)
-- [👥 Community & Support](#-community--support)
+This repository and the Gengram model weights are licensed under the [Apache License 2.0](LICENSE). 
 
-**For Complete Documentation** → [Main Branch](https://github.com/NVIDIA/Megatron-LM) | [Official Docs](https://docs.nvidia.com/Megatron-Core/)
+Please note that the primary use of Gengram model is to support genomics research, providing researchers with advanced analytical capabilities and long-context modeling tools powered by large-scale foundation models for the human genome. It is not intended for use in any manner that violates applicable laws or regulations, nor for any activities prohibited by the license agreement.
 
-</details>
+## 6. Citation and Acknowledgements
 
+We acknowledge the high-quality sequencing data provided by [CycloneSEQ](https://www.cyclone-seq.com/), which forms an important foundation for this work. We also appreciate the inspiration from DeepSeek's [Engram](https://github.com/deepseek-ai/Engram) module and the framework support provided by [Megatron-LM](https://github.com/NVIDIA/Megatron-LM). Model training was conducted on the [021 Science Foundation Model](https://www.zero2x.org/021) and [Zero2X](https://www.zero2x.org/) open platform.
 
+If you use this work in your research, please cite the following paper:
 
-
-
-
-## Dev Branch Philosophy
-
-### Fast Iteration
-- **Streamlined Review**: 1 code owner + 1 dev approver (can delegate review) + CI/CD
-
-### Feature Lifecycle (Coming Soon)
-- **6-Month Timeline**: Experimental features must graduate to stable or be deprecated
-- **Migration Support**: Assistance provided for feature transitions
-
-### Stability Expectations
-- **Experimental Nature**: Features may change or be removed as development progresses
-- **Testing**: All features will pass convergence and performance validation before inclusion
-- **Support**: Dev branch issues should include `[DEV]` prefix
-
-## Performance & Benchmarking
-
-- 🚀 [2025/11] [Optimizing DeepSeek-V3 Training Performance on NVIDIA GB200 NVL72](docs/discussions/deepseek-v3-gb200-optimization/deepseek-v3-gb200-optimization.md).
-- ⚡ [2025/11] [A Guide to Reproduce DeepSeek-V3 Pre-training Performance on GB200](docs/discussions/deepseek-v3-gb200-optimization/deepseek-v3-gb200-reproduce-guide.md).
-
-## Community & Support
-
-### Getting Help
-- 📖 **[Documentation](https://docs.nvidia.com/Megatron-Core/)** - Official documentation
-- 🐛 **[Issues](https://github.com/NVIDIA/Megatron-LM/issues)** - Bug reports and feature requests
-
-### Contributing
-We ❤️ contributions! Ways to contribute:
-
-- 🐛 **Report bugs** - Help us improve reliability
-- 💡 **Suggest features** - Shape the future of Megatron Core
-- 📝 **Improve docs** - Make Megatron Core more accessible
-- 🔧 **Submit PRs** - Contribute code improvements
-
-**→ [Contributing Guide](./CONTRIBUTING.md)**
-
-### Citation
 ```bibtex
-@article{megatron-lm,
-  title={Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism},
-  author={Shoeybi, Mohammad and Patwary, Mostofa and Puri, Raul and LeGresley, Patrick and Casper, Jared and Catanzaro, Bryan},
-  journal={arXiv preprint arXiv:1909.08053},
-  year={2019}
+@article@article{gengram2026,
+  title={Beyond Conditional Computation: Retrieval-Augmented Genomic Foundation Models with Gengram},
+  author={Genos Team and Xu, Huinan and Feng, Xuyang and Chen, Junhong and Liu Junchen and Deng, Kaiwen and Ding, Kai and Long, Shengning and Shuai, Jiaxue and Li, Zhaorong and Liu, Shiping and Xue, Guirong and Xiao, Zhan},
+  journal={arXiv preprint arXiv:submit/7211321},
+  year={2026}
 }
 ```
+
+## 7. Contact
+
+For project-related questions, please open an issue [issue](https://github.com/BGI-HangzhouAI/Gengram/issues). You can also contact the Genos Team at Genos@genomics.cn. 
+
