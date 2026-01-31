@@ -171,5 +171,5 @@ If you use this work in your research, please cite the following paper:
 
 ## 7. Contact
 
-For project-related questions, please open an issue [issue](https://github.com/BGI-HangzhouAI/Gengram/issues). You can also contact the Genos Team at Genos@genomics.cn. 
+For project-related questions, please open an [issue](https://github.com/BGI-HangzhouAI/Gengram/issues). You can also contact the Genos Team at Genos@genomics.cn. 
 
