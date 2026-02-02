@@ -4,7 +4,7 @@
   <a href="https://huggingface.co/BGI-HangzhouAI/Gengram" target="_blank">
       <img alt="Hugging Face" src="https://img.shields.io/badge/🤗%20Hugging%20Face-Gengram%20-ffc107"/>
   </a>
-  <a href="https://arxiv.org/abs/7211321" target="_blank">
+  <a href="https://arxiv.org/abs/2601.22203" target="_blank">
       <img alt="arXiv" src="https://img.shields.io/badge/📜%20arXiv-Technical Report-brightgreen?logo=Linkedin&logoColor=white"/>
   </a>
   <a href="https://github.com/BGI-HangzhouAI/Gengram/blob/main/LICENSE" target="_blank">
