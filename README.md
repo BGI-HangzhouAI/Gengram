@@ -164,7 +164,7 @@ If you use this work in your research, please cite the following paper:
 @article@article{gengram2026,
   title={Beyond Conditional Computation: Retrieval-Augmented Genomic Foundation Models with Gengram},
   author={Genos Team and Xu, Huinan and Feng, Xuyang and Chen, Junhong and Liu Junchen and Deng, Kaiwen and Ding, Kai and Long, Shengning and Shuai, Jiaxue and Li, Zhaorong and Liu, Shiping and Xue, Guirong and Xiao, Zhan},
-  journal={arXiv preprint arXiv:submit/7211321},
+  journal={arXiv preprint arXiv:https://arxiv.org/abs/2601.22203},
   year={2026}
 }
 ```
